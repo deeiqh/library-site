@@ -40,11 +40,11 @@ app.use('/catalog', catalogRouter);
 // const async = require('async');
 // function foo(cb) {
 //   console.log('foooo');
-//   cb(null, 'two');
+//   cb('error', 'two');
 // }
 // async.series([
 //   cb => foo(cb)
-// ], (err, result) => console.log('ok', result));
+// ], (err, result) => err? console.log('error: ', err) : console.log('result: ', result));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
