@@ -37,6 +37,15 @@ app.use('/users', usersRouter);
 app.use('/wiki', wikiRouter);
 app.use('/catalog', catalogRouter);
 
+// const async = require('async');
+// function foo(cb) {
+//   console.log('foooo');
+//   cb(null, 'two');
+// }
+// async.series([
+//   cb => foo(cb)
+// ], (err, result) => console.log('ok', result));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

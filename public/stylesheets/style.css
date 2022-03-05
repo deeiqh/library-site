@@ -1,8 +1,36 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.row {
+  display: flex;
+  flex-flow: row;
+  height: calc(100vh - 16px);
+}
+
+.col-sm-2 {
+  flex: 2;
+  background-color: rgb(233, 232, 232);
+}
+
+.col-sm-10 {
+  flex: 10;
+}
+
+.sidebar-nav {
+  padding: 1.5em;
+}
+
+.sidebar-nav li {
+  margin: 0.5em;
+  list-style-type: none;
+}
+
+.sidebar-nav li a{
+  text-decoration: none;
+}
+
+.sidebar-nav li hr {
+  margin: 2em;
+  visibility: hidden;
 }
