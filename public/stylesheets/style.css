@@ -15,6 +15,8 @@ body {
 
 .col-sm-10 {
   flex: 10;
+  padding: 1em;
+  line-height: 2em;
 }
 
 .sidebar-nav {
@@ -33,4 +35,16 @@ body {
 .sidebar-nav li hr {
   margin: 2em;
   visibility: hidden;
+}
+
+.text-danger {
+  color: red;
+}
+
+.text-warning {
+  color: rgb(117, 117, 3)
+}
+
+.text-success {
+  color: green;
 }

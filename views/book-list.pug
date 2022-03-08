@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1= title
+
+    ul
+        each d in data
+            li #[a(href=d.url) !{d.title}] (!{d.author.name})
+        else 
+            li There are no books.
