@@ -15,7 +15,7 @@ const mongoose = require('mongoose');
 const mongooseDB = 'mongodb+srv://anyone:anyone@cluster0.e8yvd.mongodb.net/library?retryWrites=true&w=majority';
 mongoose.connect(mongooseDB, {useNewURLParser: true, useUnifiedTopology: true});
 const db = mongoose.connection;
-db.on('error', error => console.log('errorr'));
+db.on('error', error => console.log('connection errorr'));
 
 const Author = require('./models/author');
 const Book = require('./models/book');

@@ -5,17 +5,19 @@ block content
     h1 Book Instance List
 
     ul 
-        each val in instances
+        each instance in instances
             li
-                a(href=val.url) #{val.book.title} : #{val.imprint} -
-                if val.status=='Available'
-                    span.text-success #{val.status}
-                else if val.status=='Maintenance'
-                    span.text-danger #{val.status}
+                a(href=instance.url) #{instance.book.title} : #{instance.imprint} 
+                | -
+                |
+                if instance.status=='Available'
+                    span.text-success #{instance.status}
+                else if instance.status=='Maintenance'
+                    span.text-danger #{instance.status}
                 else
-                    span.text-warning #{val.status}
-                if val.status!='Available'
-                    span  (Due: #{val.due_back} )
+                    span.text-warning #{instance.status}
+                if instance.status!='Available'
+                    span  (Due: #{instance.due_back_formatted} )
 
         else
             li There are no instances.

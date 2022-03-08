@@ -16,10 +16,9 @@ exports.index = function(req, res) {
         book_instance_available_count: callback => BookInstance.countDocuments({status: 'Available'}, callback),
         author_count: callback => Author.countDocuments({}, callback),
         genre_count: callback => Genre.countDocuments({}, callback),
-    }, (error, results) => {
-        console.log(results);
-        res.render('index', {title: 'Library Home', error: error, data: results});
-    });
+    }, (error, results) => 
+        error ? console.log('error: ', error) : res.render('index', {title: 'Library Home', error: error, data: results})
+    );
 };
 
 // Display list of all books.
