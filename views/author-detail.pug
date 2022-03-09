@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+
+    h1 Author: #{data.author[0].name}
+
+    section 
+        p #{data.author[0].lifespan}
+
+    section(class='list')
+        div
+            h2 Books
+        each book in data.books
+            div 
+                a(href=book.url) #{book.title}
+                p #{book.summary}

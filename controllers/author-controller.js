@@ -1,11 +1,39 @@
 const Author = require('../models/author');
+const Book = require('../models/book');
+const async = require('async');
 
-exports.author_list = (req, res) => {
-    res.send('author_list');
+exports.author_list = (req, res, next) => {
+    Author
+        .find()
+        .sort({first_name: 'asc'})
+        .exec((error, authors) => {
+            if (error) next(error);
+            else {
+                res.render('author-list', {data: authors});
+            }
+        })
 };
 
-exports.author_detail = (req, res) => {
-    res.send('author_detail' + req.parameters.id);
+exports.author_detail = (req, res, next) => {
+    const author = req.params.id;
+    async.parallel({
+        author: callback => {
+            Author
+                .find({_id: author})
+                .exec(callback)
+        },
+        books: callback => {
+            Book
+                .find({author: author})
+                .select('title summary')
+                .sort({title: 'asc'})
+                .exec(callback)
+        }
+    }, (error, results) => {
+        error ?
+            next(error)
+            : res.render('author-detail', {data: results});
+    })
 };
 
 exports.author_create_get = (req, res) => {

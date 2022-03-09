@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+    h1 Genre: #{data.genre[0].name}
+
+    h2 Books
+
+    dl  
+        each book in data.books 
+            dt 
+                a(href=book.url) #{book.title}
+            dd #{book.summary}
+        else 
+            li There are no books.

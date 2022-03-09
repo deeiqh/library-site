@@ -1,0 +1,34 @@
+extends layout 
+
+block content 
+    h1 Book: #{data.book[0].title}
+    section 
+        p
+            strong Author:
+            span  #{data.book[0].author.name}
+        p 
+            strong Summary: 
+            span  #{data.book[0].summary}
+        p
+            strong ISBN: 
+            span  #{data.book[0].isbn}
+        p 
+            strong Genre:
+            each g in data.book[0].genre
+                span  #{g.name},
+        
+    section(class='list')
+        p  #[strong Copies:]
+        each instance in data.instance
+            div 
+                if instance.status == 'Available'
+                    p(class='text-success') #{instance.status}
+                else if instance.status == 'Maintenance'
+                    p(class='text-danger') #{instance.status}   
+                else 
+                    p(class='text-warning') #{instance.status}
+                p #[strong Imprint: ] #{instance.imprint}
+                p #[strong Due back:] #{instance.due_back_formatted}
+                p #[strong ID:] #[a(href=instance.url) #{instance.id}]
+            
+

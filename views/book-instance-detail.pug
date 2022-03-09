@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+
+    h1 ID: #{data[0]._id}
+    p #[strong Title: ] #{data[0].book.title}
+    p #[strong Imprint: ] #{data[0].imprint}
+    
+    if data[0].status == 'Available'
+        p #[strong Status: ] #[span(class='text-success') #{data[0].status}]
+    else if data[0].status == 'Maintenance'
+        p #[strong Status: ] #[span(class='text-danger') #{data[0].status}]
+    else 
+        p #[strong Status: ] #[span(class='text-warning') #{data[0].status}]
+    
+    p #[strong Due back: ] #{data[0].due_back_formatted}
