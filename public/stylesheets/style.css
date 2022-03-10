@@ -56,3 +56,10 @@ body {
   margin-bottom: 3em;
   margin-left: 2em;
 }
+.error-form-value {
+  color: red;
+  margin-left: 1em;
+}
+.error-form-value:before {
+  content: '*';
+}

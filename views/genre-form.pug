@@ -4,8 +4,8 @@ block content
     h1 #{title}
 
     form(method='post' action='')
-        label(for='name') Name: 
-        input(type='text' id='name' name='name' value=genre ? genre.name : '')
+        label(for='name') Genre: 
+        input(type='text' id='name' name='name' placeholder='Fantasy, Poetry, etc' value=genre ? genre : '')
         button(type='submit') Submit
         if errors
             ul 

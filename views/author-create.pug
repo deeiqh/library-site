@@ -1,0 +1,33 @@
+extends layout
+
+block content 
+
+    h1 Author Create
+
+    form(method='post' action='')
+        div
+            label(for='first_name') First Name: 
+            input(id='first_name' type='text' required name='firstName' value= body ? body.firstName : '')
+            if errors && errors.firstName
+                span(class='error-form-value') #{errors.firstName.msg}
+        div
+            label(for='family_name') Family Name: 
+            input(id='family_name' type='text' required name='familyName' value= body ? body.familyName : '')
+            if errors && errors.familyName 
+                span(class='error-form-value') #{errors.familyName.msg}
+
+        div 
+            label(for='date_of_birth') Date of Birth: 
+            input(id='date_of_birth' type='date' name='dateOfBirth' value= body ? body.dateOfBirth : '')
+            if errors && errors.dateOfBirth
+                span(class='error-form-value') #{errors.dateOfBirth.msg}
+
+
+        div 
+            label(for='date_of_death') Date of Death: 
+            input(id='date_of_death' type='date' name='dateOfDeath' value= body ? body.dateOfDeath : '')
+            if errors && errors.dateOfDeath
+                span(class='error-form-value') #{errors.dateOfDeath.msg}
+
+        div 
+            button(type='submit') Submit

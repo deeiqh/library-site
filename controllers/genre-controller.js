@@ -51,6 +51,7 @@ exports.genre_create_post = [
         .isAlpha().withMessage('Not numbers.').escape(),
     function(req, res, next) {
         const errors = validationResult(req);
+        //console.log(errors.array()[0].msg);
         if (errors.isEmpty()) {
             const genre = new Genre({name: req.body.name});
             Genre
