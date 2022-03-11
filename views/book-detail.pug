@@ -13,12 +13,12 @@ block content
             strong ISBN: 
             span  #{data.book[0].isbn}
         p 
-            strong Genre:
+            strong Genre(s):
             each g in data.book[0].genre
                 span  #{g.name},
         
     section(class='list')
-        p  #[strong Copies:]
+        span  #[strong Copies:]
         each instance in data.instance
             div 
                 if instance.status == 'Available'
@@ -30,5 +30,6 @@ block content
                 p #[strong Imprint: ] #{instance.imprint}
                 p #[strong Due back:] #{instance.due_back_formatted}
                 p #[strong ID:] #[a(href=instance.url) #{instance.id}]
-            
+        else 
+            span  No copies found
 

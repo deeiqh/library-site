@@ -1,0 +1,35 @@
+extends layout 
+
+block content
+
+    h1 Create Book
+
+    form(method='post' action='')
+
+        div 
+            label(for='title') Title 
+            input(type='text' id='title' required name='title' value= body ? body.title : '')
+
+        div
+            label(for='author') Author
+            select(id='author' required name='author')
+                for author in authors
+                    option(value=author._id selected=(body && author._id.toString() === body.author.toString()) ? true : false) #{author.name}
+
+        div
+            label(for='summary') Summary
+            input(type='text' id='summary' required name='summary' value= body ? body.summary : '')
+
+        div
+            label(for='isbn') ISBN
+            input(type='text' id='isbn' required placeholder='ISBN13' name='isbn' value= body ? body.isbn : '')
+            if errors && errors.isbn
+                span(class='error-form-value') #{errors.isbn.msg}
+
+        div
+            for genre in genres
+                input(id=genre.name type='checkbox' name='genre' checked=genre.checked value=genre._id)       
+                label(for=genre.name) #{genre.name}
+
+        div 
+            button(type='submit') Submit

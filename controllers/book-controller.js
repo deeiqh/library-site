@@ -4,6 +4,9 @@ const Genre = require('../models/genre');
 const BookInstance = require('../models/book-instance');
 
 const async = require('async');
+const author = require('../models/author');
+
+const {body, validationResult} = require('express-validator');
 
 exports.index = function(req, res) {
     // Book.countDocuments({title: 'The Name of the Wind (The Kingkiller Chronicle, #1)'}, (error, result) => {
@@ -110,14 +113,102 @@ exports.book_detail = function(req, res, next) {
 };
 
 // Display book create form on GET.
-exports.book_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book create GET');
+exports.book_create_get = function(req, res, next) {
+    async.parallel ({
+        authors: callback => {
+            Author
+                .find()
+                .sort({first_name: 1})
+                .exec(callback);
+        },
+        genres: callback => {
+            Genre
+                .find()
+                .sort({name: 1})
+                .exec(callback);
+        }
+    }, (error, results) => {
+        error ? 
+            next(error)
+            : res.render('book-create', {authors: results.authors, genres: results.genres})
+    })
 };
 
 // Handle book create on POST.
-exports.book_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book create POST');
-};
+exports.book_create_post = [
+    body('isbn').matches(/ISBN\d{2}/).withMessage('ISBN does not match.'), 
+
+    function(req, res, next) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let errorData = {};
+            errors.array().forEach(obj => {
+                errorData[obj.param] = {msg: obj.msg};
+            })
+            async.parallel({
+                authors: callback => {
+                    Author
+                        .find()
+                        .sort({first_name: 1})
+                        .exec(callback)
+                },
+                genres: callback => {
+                    Genre
+                        .find()
+                        .sort({name: 1})
+                        .exec(callback)
+                }
+            }, (error, result) => {
+                if (error) next(error)
+                else {
+                    console.log(req.body)
+                    for (let i=0; i < result.genres.length; i++) {
+                        if (req.body.genre.indexOf(result.genres[i]._id.toString()) > -1) {
+                            result.genres[i].checked = true;
+                        }
+                    }                 
+                    console.log(result.authors)
+                    res.render('book-create', {
+                        body: req.body, 
+                        authors: result.authors,
+                        genres: result.genres,
+                        errors: errorData,
+                    });
+                }
+            });
+        } else {
+            const book = new Book({
+                title: req.body.title,
+                author: req.body.author,
+                summary: req.body.summary,
+                genre: req.body.genre,
+                isbn: req.body.isbn
+            });          
+
+            Book
+                .findOne({
+                    title: book.title,
+                    author: book.author,
+                    summary: book.summary,
+                    genres: book.genre,
+                    isbn: book.isbn
+                })
+                .exec((error, found) => {
+                    if (error) next(error);
+                    else {
+                        if (found) res.redirect(book.url)
+                        else {
+                            book.save(error => {
+                                error ?
+                                next(error)
+                                : res.redirect(book.url);
+                            })
+                        }
+                    }
+                });
+        }
+    }
+]
 
 // Display book delete form on GET.
 exports.book_delete_get = function(req, res) {
