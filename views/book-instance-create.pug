@@ -1,0 +1,31 @@
+extends layout 
+
+block content 
+
+    h1 Create Book Instance
+
+    form(method='post' action='')
+        div 
+            label(for='book') Book
+            select(id='book' name='book' required)
+                for book in books
+                    option(value=book._id selected= (body && book._id.toString() === body.book.toString()) ? true : false) #{book.title}
+
+        div 
+            label(for='imprint') Imprint
+            input(id='imprint' type='text' name='imprint' value= body ? body.imprint : '' palceholder= 'Example: Tor Books, 11/22/2016, Hardcover') 
+            if errors && errors.imprint
+                span(class='error-form-value') #{errors.imprint}
+        div 
+            label(for='due_back') Date when book available 
+            input(id='due_back' type='date' name='dueBack' value= body ? body.dueBack : '' required)
+
+        div 
+            label(for='status') Status
+            select(id='status' name='status' required)
+                option(value= 'Maintenance' selected) Maintenance
+                option(value= 'Available' selected= (body && body.status==='available') ? true : false) Available
+                option(value= 'Loaned' selected= (body && body.status==='loaned') ? true : false) Loaned
+
+        div 
+            button(type='submit') Submit

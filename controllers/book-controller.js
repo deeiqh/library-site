@@ -136,7 +136,10 @@ exports.book_create_get = function(req, res, next) {
 
 // Handle book create on POST.
 exports.book_create_post = [
-    body('isbn').matches(/ISBN\d{2}/).withMessage('ISBN does not match.'), 
+    body('isbn').matches(/^ISBN\d{2}$/).withMessage('ISBN does not match ISBN[number][number], for example ISBN13.').escape(), 
+    body('title').escape(),
+    body('summary').escape(),
+    //body('genre.*').escape(),
 
     function(req, res, next) {
         const errors = validationResult(req);
@@ -161,13 +164,11 @@ exports.book_create_post = [
             }, (error, result) => {
                 if (error) next(error)
                 else {
-                    console.log(req.body)
                     for (let i=0; i < result.genres.length; i++) {
                         if (req.body.genre.indexOf(result.genres[i]._id.toString()) > -1) {
                             result.genres[i].checked = true;
                         }
                     }                 
-                    console.log(result.authors)
                     res.render('book-create', {
                         body: req.body, 
                         authors: result.authors,
