@@ -7,6 +7,8 @@ const async = require('async');
 const author = require('../models/author');
 
 const {body, validationResult} = require('express-validator');
+const { find } = require('../models/book');
+const book = require('../models/book');
 
 exports.index = function(req, res) {
     // Book.countDocuments({title: 'The Name of the Wind (The Kingkiller Chronicle, #1)'}, (error, result) => {
@@ -222,11 +224,103 @@ exports.book_delete_post = function(req, res) {
 };
 
 // Display book update form on GET.
-exports.book_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book update GET');
+exports.book_update_get = function(req, res, next) {
+    const id = req.params.id;
+    async.parallel({
+        book: callback => {
+            Book
+                .findOne({_id: id})
+                .exec(callback);
+        },
+        authors: callback => {
+            Author
+                .find()
+                .exec(callback)
+        },
+        genres: callback => {
+            Genre
+                .find()
+                .exec(callback)
+        }
+    }, (error, result) => {
+        if (error) next(error);
+        else {
+            for (let i=0; i<result.genres.length; i++) {
+                if (result.book.genre.indexOf(result.genres[i]._id.toString()) > -1) {
+                    result.genres[i].checked = true;
+                }
+            }
+            res.render('book-update', {book: result.book, authors: result.authors, genres: result.genres});
+        }
+    });
 };
 
 // Handle book update on POST.
-exports.book_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book update POST');
-};
+exports.book_update_post = [
+    body('title').trim().isLength({min: 2}).withMessage('At least two letters.').escape(),
+    body('author').trim().escape(),
+    body('summary').trim().escape(),
+    body('isbn').trim().escape(),
+
+    function(req, res, next) {
+
+        const id = req.params.id;
+        async.parallel({
+            book: callback => {
+                Book
+                    .findOne({_id: id})
+                    .exec(callback);
+            },
+            authors: callback => {
+                Author
+                    .find()
+                    .exec(callback)
+            },
+            genres: callback => {
+                Genre
+                    .find()
+                    .exec(callback)
+            }
+        }, (error, result) => {
+            if (error) next(error);
+            else {
+                console.log(req.body);
+                for (let i=0; i<result.genres.length; i++) {
+                    if (req.body.genre && req.body.genre.indexOf(result.genres[i]._id.toString()) > -1) {
+                        result.genres[i].checked = true;
+                    }
+                }
+
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    errorsMsg = {}
+                    errors.array().forEach( error => {
+                        errorsMsg[error.param] = error.msg;
+                    });
+                    console.log(errorsMsg)
+                    res.render('book-update', {
+                        book: result.book, authors: result.authors, genres: result.genres,
+                        body: req.body, errors: errorsMsg
+                    });
+                } else {
+                    const book = new Book({
+                        title: req.body.title,
+                        author: req.body.author,
+                        summary: req.body.summary,
+                        isbn: req.body.isbn,
+                        genre: req.body.genre,
+                        _id: id
+                    });
+                    Book
+                        .findByIdAndUpdate(id, book, {}, (error, book) => {
+                            if (error) next(error)
+                            else {
+                                console.log(book);
+                                res.redirect(book.url);
+                            }
+                        });
+                }
+            }
+        });
+    }
+]

@@ -103,6 +103,7 @@ exports.author_delete_get = function(req, res, next) {
 // Handle Author delete on POST.
 exports.author_delete_post = function(req, res, next) {
     const id = req.body.id;
+    //make it parallel for performance
     Author
     .find({_id: id})
     .exec((error, author) => {

@@ -1,0 +1,38 @@
+extends layout
+
+block content
+
+    h1 Update Book
+
+    if book
+        form(method='post' action='')
+            div
+                label(for='title') Title
+                input(type='text' value= body ? body.title : book.title name='title')
+                if errors && errors.title
+                    span(class='error-form-value') #{errors.title}
+            div
+                label(for='author') Author
+                select(id='author' name='author' required)
+                    for author in authors
+                        option(value=author._id selected= (body && body.author.toString() === author._id.toString()) ? true : (!body && book.author.toString() === author._id.toString() ? true : false) ) #{author.name}
+    
+            div 
+                label(for='summary') Summary
+                input(id='summary' type='text' value= (body ? body.summary : book.summary) name='summary' required)
+
+            div 
+                label(for='isbn') ISBN
+                input(id='isbn' type='text' value= (body ? body.isbn : book.isbn) name='isbn' required)
+
+            div 
+                span Genre:
+                for genre in genres
+                    input(id=genre.name type='checkbox' name='genre' value= genre._id checked= genre.checked)
+                    label(for=genre.name) #{genre.name}
+
+            div
+                button(type='submit') Submit
+    
+    else 
+        p Book not found
