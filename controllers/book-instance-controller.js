@@ -43,12 +43,11 @@ exports.bookinstance_create_get = function(req, res, next) {
 // Handle BookInstance create on POST.
 exports.bookinstance_create_post = [
     body('book').escape(),
-    body('imprint').isLength({min: 1}).withMessage('Can not be empty.').escape(),
-    body('dueBack').escape(),
+    body('imprint').trim().isLength({min: 1}).withMessage('Can not be empty.').escape(),
+    body('dueBack').optional({checkFalsy: true}).escape(),
     body('status').escape(),
 
     function(req, res, next) {
-        console.log(req.body)
         
         errors = validationResult(req);
         if(!errors.isEmpty()) {
@@ -56,7 +55,6 @@ exports.bookinstance_create_post = [
             errors.array().forEach( e => {
                 errorsMessages[e.param] = e.msg;
             });
-            console.log('ERORRS ', errorsMessages)
             
             Book
                 .find()
@@ -74,7 +72,6 @@ exports.bookinstance_create_post = [
                     due_back: req.body.due_back
                 })
                 .exec((error, found) => {
-                    console.log('FOUND ',found)
                     if (error) next(error);
                     else {
                         if (found) {

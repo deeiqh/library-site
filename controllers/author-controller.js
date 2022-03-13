@@ -88,13 +88,47 @@ exports.author_create_post = [
 ]
 
 // Display Author delete form on GET.
-exports.author_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author delete GET');
+exports.author_delete_get = function(req, res, next) {
+    const id = req.params.id;
+    Author
+        .find({_id: id})
+        .exec((error, author) => {
+            if (error) next(error);
+            else {
+                res.render('author-delete', {author: author[0]});
+            }
+        });
 };
 
 // Handle Author delete on POST.
-exports.author_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author delete POST');
+exports.author_delete_post = function(req, res, next) {
+    const id = req.body.id;
+    Author
+    .find({_id: id})
+    .exec((error, author) => {
+        if (error) next(error);
+        else {
+            Book 
+                .find({author: id})
+                .exec((error, books) => {
+                    console.log(books)
+                    if (error) next(error);
+                    else if (books.length > 0) {
+                        res.render('author-delete', {books: books, author: author[0]});
+                    }
+                    else {
+                        Author
+                            .deleteOne({_id: id})
+                            .exec(error => {
+                                error ?
+                                    next(error)
+                                    : res.redirect('/catalog/authors');
+                            });
+                    }
+                });
+        }
+    });
+
 };
 
 // Display Author update form on GET.

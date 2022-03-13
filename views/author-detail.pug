@@ -14,3 +14,9 @@ block content
             div 
                 a(href=book.url) #{book.title}
                 p #{book.summary}
+        else 
+            div
+                p This author has no books.
+
+    section
+        a(href= data.author[0].url + '/delete') Delete author
