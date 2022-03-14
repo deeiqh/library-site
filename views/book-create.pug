@@ -28,7 +28,7 @@ block content
 
         div
             for genre in genres
-                input(id=genre.name type='checkbox' name='genre' checked=genre.checked value=genre._id required)       
+                input(id=genre.name type='checkbox' name='genre' checked=genre.checked value=genre._id)       
                 label(for=genre.name) #{genre.name}
 
         div 

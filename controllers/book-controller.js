@@ -284,7 +284,6 @@ exports.book_update_post = [
         }, (error, result) => {
             if (error) next(error);
             else {
-                console.log(req.body);
                 for (let i=0; i<result.genres.length; i++) {
                     if (req.body.genre && req.body.genre.indexOf(result.genres[i]._id.toString()) > -1) {
                         result.genres[i].checked = true;
@@ -297,7 +296,6 @@ exports.book_update_post = [
                     errors.array().forEach( error => {
                         errorsMsg[error.param] = error.msg;
                     });
-                    console.log(errorsMsg)
                     res.render('book-update', {
                         book: result.book, authors: result.authors, genres: result.genres,
                         body: req.body, errors: errorsMsg
@@ -315,7 +313,6 @@ exports.book_update_post = [
                         .findByIdAndUpdate(id, book, {}, (error, book) => {
                             if (error) next(error)
                             else {
-                                console.log(book);
                                 res.redirect(book.url);
                             }
                         });
