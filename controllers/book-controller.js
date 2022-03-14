@@ -72,7 +72,7 @@ exports.book_list = function(req, res) {
                             results.book.push(book.title);
                             results.first_name.push(result[0].first_name);
                             results.family_name.push(result[0].family_name);
-                            if (callback) callback(null, results);
+                            if (callback) callback(null, results);;
                         }
                     });
             };
