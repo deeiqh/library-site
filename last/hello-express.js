@@ -3,6 +3,7 @@ const express = require('express');
 const operations = require('./public/operations.js');
 const object = require('./public/object.js');
 const foo = require('./public/function.js');
+const wiki = require('./public/wiki.js');
 
 const back = express();
 const port = 3000;
@@ -45,3 +46,5 @@ back.get('/operate',
 //         next();
 //     }
 // );
+
+back.use('/wiki', wiki);
